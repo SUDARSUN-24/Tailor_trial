@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atelier Thorne — Fine Tailors</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --cream:#F6EDD9;
+  --cream-dark:#EDE0C4;
+  --warm-white:#FDFAF4;
+  --brown-deep:#2B1A0F;
+  --brown-rich:#4A2E1A;
+  --brown-mid:#7A5035;
+  --brown-light:#A87050;
+  --caramel:#C09060;
+  --caramel-light:#D4AA7A;
+  --text-dark:#2B1A0F;
+  --text-mid:#5C3D25;
+  --text-soft:#9B7A5A;
+  --divider:rgba(160,112,80,0.2);
+  --divider-strong:rgba(160,112,80,0.4);
+}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--warm-white);color:var(--text-dark);overflow-x:hidden;}
+
+/* ── CURSOR ── */
+body{cursor:none;}
+.cursor{position:fixed;width:10px;height:10px;background:var(--caramel);border-radius:50%;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);transition:transform 0.08s,width 0.2s,height 0.2s;}
+.cursor-ring{position:fixed;width:32px;height:32px;border:1px solid var(--caramel);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:transform 0.18s,width 0.2s,height 0.2s,opacity 0.2s;}
+
+/* ── NAV ── */
+#mainNav{position:fixed;top:0;left:0;right:0;z-index:500;display:flex;align-items:center;justify-content:space-between;padding:1.4rem 5%;background:rgba(253,250,244,0.95);border-bottom:1px solid var(--divider);backdrop-filter:blur(8px);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:500;color:var(--brown-deep);letter-spacing:0.06em;cursor:pointer;}
+.nav-logo span{color:var(--caramel);}
+.nav-links{display:flex;gap:0;list-style:none;}
+.nav-links li a{font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;color:var(--text-mid);text-decoration:none;padding:0.5rem 1.2rem;position:relative;transition:color 0.2s;cursor:pointer;}
+.nav-links li a::after{content:'';position:absolute;bottom:0;left:1.2rem;right:1.2rem;height:1px;background:var(--caramel);transform:scaleX(0);transition:transform 0.25s;}
+.nav-links li a:hover,
+.nav-links li a.active{color:var(--brown-deep);}
+.nav-links li a.active::after,.nav-links li a:hover::after{transform:scaleX(1);}
+.nav-book{font-size:0.7rem;letter-spacing:0.18em;text-transform:uppercase;padding:0.65rem 1.6rem;background:var(--brown-deep);color:var(--cream);text-decoration:none;cursor:pointer;transition:background 0.25s;}
+.nav-book:hover{background:var(--brown-rich);}
+
+/* ── PAGE SYSTEM ── */
+.page{display:none;min-height:100vh;padding-top:68px;}
+.page.active{display:block;}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp{from{opacity:0;transform:translateY(28px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes scaleIn{from{opacity:0;transform:scale(0.96);}to{opacity:1;transform:scale(1);}}
+@keyframes slideRight{from{width:0;}to{width:100%;}}
+.anim-up{animation:fadeUp 0.7s ease forwards;}
+.anim-fade{animation:fadeIn 0.8s ease forwards;}
+.anim-scale{animation:scaleIn 0.6s ease forwards;}
+.d1{animation-delay:0.1s;opacity:0;}
+.d2{animation-delay:0.25s;opacity:0;}
+.d3{animation-delay:0.4s;opacity:0;}
+.d4{animation-delay:0.55s;opacity:0;}
+.d5{animation-delay:0.7s;opacity:0;}
+
+/* ── SHARED COMPONENTS ── */
+.section-tag{font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--caramel);display:flex;align-items:center;gap:0.8rem;margin-bottom:1rem;}
+.section-tag::before{content:'';width:28px;height:1px;background:var(--caramel);}
+h2.display{font-family:'Playfair Display',serif;font-size:clamp(2rem,4.5vw,3.4rem);font-weight:400;line-height:1.15;color:var(--brown-deep);}
+h2.display em{font-style:italic;color:var(--brown-mid);}
+.divider-line{width:100%;height:1px;background:var(--divider);margin:3rem 0;}
+.btn-fill{display:inline-block;padding:0.9rem 2.4rem;background:var(--brown-deep);color:var(--cream);font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:500;border:none;cursor:pointer;text-decoration:none;transition:background 0.25s,transform 0.2s;}
+.btn-fill:hover{background:var(--brown-rich);transform:translateY(-2px);}
+.btn-outline{display:inline-block;padding:0.9rem 2.4rem;border:1px solid var(--brown-deep);color:var(--brown-deep);font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:500;text-decoration:none;cursor:pointer;transition:all 0.25s;}
+.btn-outline:hover{background:var(--brown-deep);color:var(--cream);}
+
+/* ═══════════════════════════════
+   HOME PAGE
+═══════════════════════════════ */
+#page-home{}
+.hero{height:calc(100vh - 68px);min-height:580px;display:grid;grid-template-columns:1fr 1fr;position:relative;overflow:hidden;}
+.hero-left{background:var(--brown-deep);display:flex;flex-direction:column;justify-content:flex-end;padding:5% 6% 6%;position:relative;overflow:hidden;}
+.hero-left::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(192,144,96,0.04) 0,rgba(192,144,96,0.04) 1px,transparent 0,transparent 40px),repeating-linear-gradient(-45deg,rgba(192,144,96,0.04) 0,rgba(192,144,96,0.04) 1px,transparent 0,transparent 40px);}
+.hero-year{font-size:0.62rem;letter-spacing:0.4em;text-transform:uppercase;color:var(--caramel);margin-bottom:2rem;}
+.hero-h1{font-family:'Playfair Display',serif;font-size:clamp(2.6rem,5vw,4.2rem);font-weight:400;line-height:1.08;color:var(--cream);}
+.hero-h1 em{font-style:italic;color:var(--caramel-light);}
+.hero-sub{font-size:0.88rem;line-height:1.85;font-weight:300;color:rgba(246,237,217,0.6);max-width:380px;margin:1.8rem 0 2.8rem;letter-spacing:0.02em;}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;}
+.hero-right{background:var(--cream-dark);position:relative;display:flex;flex-direction:column;justify-content:space-between;padding:5% 6%;}
+.hero-fabric-display{flex:1;display:flex;align-items:center;justify-content:center;position:relative;}
+.fabric-showcase{width:80%;max-width:320px;aspect-ratio:3/4;position:relative;}
+.fabric-card-large{position:absolute;width:85%;aspect-ratio:2/3;border:1px solid var(--divider-strong);}
+.fc1{top:0;left:0;background:repeating-linear-gradient(160deg,rgba(160,112,80,0.1) 0,rgba(160,112,80,0.1) 2px,transparent 2px,transparent 26px,rgba(160,112,80,0.05) 26px,rgba(160,112,80,0.05) 28px,transparent 28px,transparent 56px),var(--cream);}
+.fc2{bottom:0;right:0;background:repeating-conic-gradient(rgba(160,112,80,0.07) 0% 25%,transparent 0% 50%) 0 0/16px 16px,var(--cream-dark);}
+.hero-stats{display:flex;gap:2rem;padding-top:2rem;border-top:1px solid var(--divider);}
+.hstat-num{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:400;color:var(--brown-deep);}
+.hstat-label{font-size:0.63rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-soft);margin-top:0.2rem;}
+
+/* Features strip */
+.features-strip{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--divider);border-bottom:1px solid var(--divider);}
+.feature-item{padding:2.2rem 2rem;border-right:1px solid var(--divider);display:flex;gap:1rem;align-items:flex-start;}
+.feature-item:last-child{border-right:none;}
+.feature-icon{width:36px;height:36px;border:1px solid var(--caramel);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0.9rem;color:var(--caramel);}
+.feature-title{font-size:0.78rem;font-weight:500;color:var(--brown-deep);letter-spacing:0.05em;margin-bottom:0.3rem;}
+.feature-desc{font-size:0.72rem;line-height:1.7;color:var(--text-soft);font-weight:300;}
+
+/* Home intro */
+.home-intro{display:grid;grid-template-columns:1fr 1fr;gap:5rem;padding:6rem 5%;}
+.intro-left{}
+.intro-right{padding-top:0.5rem;}
+.intro-right p{font-size:0.88rem;line-height:2;font-weight:300;color:var(--text-mid);margin-bottom:1.4rem;}
+.intro-right p:first-child{font-size:1rem;font-family:'Playfair Display',serif;font-style:italic;color:var(--brown-mid);line-height:1.8;}
+
+/* Materials preview */
+.home-materials{padding:0 5% 6rem;}
+.home-materials-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3rem;}
+.materials-scroll{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem;}
+.mat-preview{cursor:pointer;transition:transform 0.3s;}
+.mat-preview:hover{transform:translateY(-6px);}
+.mat-swatch{height:200px;border:1px solid var(--divider);position:relative;overflow:hidden;}
+.mat-info{padding:1rem 0;}
+.mat-name{font-family:'Playfair Display',serif;font-size:1rem;color:var(--brown-deep);}
+.mat-type{font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--text-soft);margin-top:0.3rem;}
+.mat-price{font-size:0.8rem;color:var(--caramel);margin-top:0.4rem;}
+
+/* Gallery preview */
+.home-gallery-preview{background:var(--brown-deep);padding:6rem 5%;}
+.gallery-grid-home{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:260px 260px;gap:3px;margin-top:3rem;}
+.gg-item{position:relative;overflow:hidden;cursor:pointer;}
+.gg-item:first-child{grid-row:span 2;}
+.gg-inner{position:absolute;inset:0;transition:transform 0.5s ease;}
+.gg-item:hover .gg-inner{transform:scale(1.05);}
+.gg-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(43,26,15,0.8) 0%,transparent 55%);opacity:0;transition:opacity 0.3s;}
+.gg-item:hover .gg-overlay{opacity:1;}
+.gg-label{position:absolute;bottom:1.2rem;left:1.2rem;right:1.2rem;color:var(--cream);font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;transform:translateY(8px);opacity:0;transition:all 0.3s;}
+.gg-item:hover .gg-label{transform:translateY(0);opacity:1;}
+.home-gallery-cta{text-align:center;margin-top:2.5rem;}
+
+/* Testimonial home */
+.home-testimonial{padding:6rem 5%;display:grid;grid-template-columns:1fr 2fr;gap:5rem;align-items:center;background:var(--cream);}
+.test-left{}
+.blockquote-text{font-family:'Playfair Display',serif;font-size:clamp(1.2rem,2.5vw,1.7rem);font-style:italic;font-weight:400;line-height:1.65;color:var(--brown-rich);margin-bottom:2rem;}
+.test-author{font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--caramel);}
+.test-role{font-size:0.75rem;color:var(--text-soft);margin-top:0.2rem;}
+
+/* ═══════════════════════════════
+   ABOUT PAGE
+═══════════════════════════════ */
+.about-hero{background:var(--brown-deep);padding:7rem 5% 6rem;display:grid;grid-template-columns:1.2fr 1fr;gap:5rem;align-items:end;position:relative;overflow:hidden;}
+.about-hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 39px,rgba(192,144,96,0.05) 40px),repeating-linear-gradient(90deg,transparent,transparent 39px,rgba(192,144,96,0.05) 40px);}
+.about-hero-text{position:relative;}
+.about-hero-text .section-tag{color:var(--caramel-light);}
+.about-hero-text .section-tag::before{background:var(--caramel-light);}
+.about-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:400;line-height:1.1;color:var(--cream);}
+.about-hero h1 em{font-style:italic;color:var(--caramel-light);}
+.about-hero-sub{font-size:0.88rem;line-height:2;font-weight:300;color:rgba(246,237,217,0.65);max-width:450px;margin-top:1.8rem;}
+.about-hero-aside{position:relative;z-index:1;}
+.about-badge{border:1px solid rgba(192,144,96,0.4);padding:2.5rem;text-align:center;}
+.about-badge-num{font-family:'Playfair Display',serif;font-size:4rem;font-weight:400;color:var(--caramel-light);line-height:1;}
+.about-badge-text{font-size:0.65rem;letter-spacing:0.28em;text-transform:uppercase;color:rgba(246,237,217,0.6);margin-top:0.8rem;}
+
+/* Story section */
+.about-story{padding:6rem 5%;display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start;}
+.story-text p{font-size:0.9rem;line-height:2;font-weight:300;color:var(--text-mid);margin-bottom:1.5rem;}
+.story-visual{display:flex;flex-direction:column;gap:1.5rem;}
+.story-img{height:260px;border:1px solid var(--divider);position:relative;overflow:hidden;}
+
+/* Timeline */
+.about-timeline{padding:4rem 5% 6rem;background:var(--cream);}
+.timeline-track{margin-top:4rem;position:relative;padding-left:3rem;}
+.timeline-track::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:var(--divider-strong);}
+.timeline-item{margin-bottom:3rem;position:relative;}
+.timeline-item::before{content:'';position:absolute;left:-3rem;top:0.35rem;width:10px;height:10px;border:2px solid var(--caramel);background:var(--cream);border-radius:50%;transform:translateX(-4.5px);}
+.tl-year{font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--caramel);margin-bottom:0.5rem;}
+.tl-title{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--brown-deep);margin-bottom:0.5rem;}
+.tl-desc{font-size:0.82rem;line-height:1.9;font-weight:300;color:var(--text-mid);}
+
+/* Team */
+.about-team{padding:0 5% 6rem;}
+.team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3rem;}
+.team-card{border:1px solid var(--divider);}
+.team-img{height:280px;background:var(--cream-dark);position:relative;overflow:hidden;}
+.team-info{padding:1.5rem;}
+.team-name{font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--brown-deep);}
+.team-role{font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--caramel);margin:0.35rem 0 0.7rem;}
+.team-bio{font-size:0.78rem;line-height:1.8;font-weight:300;color:var(--text-soft);}
+
+/* Values */
+.about-values{background:var(--brown-deep);padding:6rem 5%;}
+.values-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border:1px solid rgba(192,144,96,0.2);margin-top:4rem;}
+.value-card{padding:3rem 2.5rem;border-right:1px solid rgba(192,144,96,0.2);}
+.value-card:last-child{border-right:none;}
+.value-num{font-family:'Playfair Display',serif;font-size:2.5rem;color:rgba(192,144,96,0.2);line-height:1;margin-bottom:1.5rem;}
+.value-title{font-family:'Playfair Display',serif;font-size:1.15rem;color:var(--cream);margin-bottom:0.8rem;}
+.value-desc{font-size:0.8rem;line-height:1.9;font-weight:300;color:rgba(246,237,217,0.5);}
+
+/* ═══════════════════════════════
+   GALLERY PAGE
+═══════════════════════════════ */
+.gallery-hero{background:var(--cream);padding:5rem 5% 4rem;}
+.gallery-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.5rem,5vw,4rem);font-weight:400;color:var(--brown-deep);margin-top:1rem;}
+.gallery-hero h1 em{font-style:italic;color:var(--brown-mid);}
+.gallery-filters{display:flex;gap:0.5rem;margin-top:2rem;flex-wrap:wrap;}
+.filter-btn{padding:0.5rem 1.4rem;border:1px solid var(--divider-strong);background:transparent;font-family:'DM Sans',sans-serif;font-size:0.7rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-mid);cursor:pointer;transition:all 0.2s;}
+.filter-btn:hover,.filter-btn.active{background:var(--brown-deep);color:var(--cream);border-color:var(--brown-deep);}
+
+.gallery-grid{padding:3rem 5% 6rem;columns:3;column-gap:1.5rem;}
+.gallery-item{break-inside:avoid;margin-bottom:1.5rem;position:relative;overflow:hidden;cursor:pointer;border:1px solid var(--divider);}
+.gallery-item img,.gallery-item-inner{display:block;width:100%;transition:transform 0.5s ease;}
+.gallery-item:hover .gallery-item-inner{transform:scale(1.04);}
+.gallery-item-inner{position:relative;}
+.gi-swatch{width:100%;background:var(--cream-dark);}
+.gi-caption{padding:1rem 1.2rem;background:var(--warm-white);}
+.gi-cat{font-size:0.6rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--caramel);}
+.gi-name{font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--brown-deep);margin-top:0.2rem;}
+
+/* ═══════════════════════════════
+   MATERIALS PAGE
+═══════════════════════════════ */
+.mat-hero{padding:5rem 5% 0;background:var(--warm-white);}
+.mat-hero-inner{display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:end;padding-bottom:4rem;border-bottom:1px solid var(--divider);}
+.mat-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:400;line-height:1.12;color:var(--brown-deep);}
+.mat-hero h1 em{font-style:italic;color:var(--brown-mid);}
+.mat-hero-right p{font-size:0.88rem;line-height:2;font-weight:300;color:var(--text-mid);}
+.mat-hero-right p+p{margin-top:1rem;}
+
+/* Featured materials */
+.mat-featured{padding:5rem 5%;}
+.mat-featured-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:3.5rem;}
+.bestseller-badge{font-size:0.62rem;letter-spacing:0.25em;text-transform:uppercase;background:var(--caramel);color:var(--warm-white);padding:0.3rem 0.9rem;}
+
+.mat-list{display:flex;flex-direction:column;gap:0;}
+.mat-row{display:grid;grid-template-columns:120px 1fr auto;gap:3rem;align-items:center;padding:2.5rem 0;border-bottom:1px solid var(--divider);transition:background 0.2s;}
+.mat-row:hover{background:var(--cream);margin:0 -2rem;padding:2.5rem 2rem;}
+.mat-swatch-sq{width:120px;height:88px;border:1px solid var(--divider);flex-shrink:0;}
+.mat-row-info{}
+.mat-row-name{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--brown-deep);}
+.mat-row-origin{font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--caramel);margin:0.3rem 0;}
+.mat-row-desc{font-size:0.82rem;line-height:1.8;font-weight:300;color:var(--text-soft);max-width:500px;}
+.mat-row-tags{display:flex;gap:0.5rem;margin-top:0.8rem;flex-wrap:wrap;}
+.mat-tag{font-size:0.6rem;letter-spacing:0.15em;text-transform:uppercase;border:1px solid var(--divider-strong);padding:0.25rem 0.7rem;color:var(--text-mid);}
+.mat-row-price{text-align:right;flex-shrink:0;}
+.mat-price-num{font-family:'Playfair Display',serif;font-size:1.4rem;color:var(--brown-mid);}
+.mat-price-unit{font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--text-soft);margin-top:0.2rem;}
+.mat-price-badge{margin-top:0.5rem;}
+
+/* Fabric guide */
+.mat-guide{background:var(--cream);padding:6rem 5%;}
+.guide-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3rem;}
+.guide-card{background:var(--warm-white);border:1px solid var(--divider);padding:2rem;}
+.guide-icon{font-size:1.6rem;margin-bottom:1rem;opacity:0.7;}
+.guide-title{font-family:'Playfair Display',serif;font-size:1rem;color:var(--brown-deep);margin-bottom:0.6rem;}
+.guide-text{font-size:0.78rem;line-height:1.85;font-weight:300;color:var(--text-soft);}
+
+/* ═══════════════════════════════
+   SERVICES PAGE
+═══════════════════════════════ */
+.services-hero{background:var(--cream);padding:5rem 5% 4rem;}
+.services-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,3.8rem);font-weight:400;color:var(--brown-deep);}
+.services-hero h1 em{font-style:italic;color:var(--brown-mid);}
+.services-hero-sub{font-size:0.9rem;line-height:2;font-weight:300;color:var(--text-mid);max-width:520px;margin-top:1.2rem;}
+
+.services-list{padding:5rem 5%;}
+.service-block{display:grid;grid-template-columns:1fr 1fr;gap:6rem;align-items:start;padding:5rem 0;border-bottom:1px solid var(--divider);}
+.service-block:first-child{padding-top:0;}
+.service-block:last-child{border-bottom:none;}
+.service-block.reverse .sb-text{order:2;}
+.service-block.reverse .sb-visual{order:1;}
+.sb-num{font-family:'Playfair Display',serif;font-size:5rem;font-weight:400;color:var(--cream-dark);line-height:1;margin-bottom:1rem;}
+.sb-title{font-family:'Playfair Display',serif;font-size:1.8rem;color:var(--brown-deep);margin-bottom:1rem;}
+.sb-desc{font-size:0.85rem;line-height:2;font-weight:300;color:var(--text-mid);margin-bottom:2rem;}
+.sb-includes{margin-bottom:2rem;}
+.sb-includes-label{font-size:0.65rem;letter-spacing:0.25em;text-transform:uppercase;color:var(--caramel);margin-bottom:0.8rem;}
+.sb-include-item{font-size:0.8rem;line-height:1.7;color:var(--text-mid);padding-left:1.2rem;position:relative;font-weight:300;}
+.sb-include-item::before{content:'—';position:absolute;left:0;color:var(--caramel);}
+.sb-price{font-family:'Playfair Display',serif;font-size:0.9rem;color:var(--text-soft);margin-bottom:1.5rem;}
+.sb-price strong{font-size:1.5rem;color:var(--brown-mid);}
+.sb-visual{height:420px;border:1px solid var(--divider);position:relative;overflow:hidden;}
+
+/* Process */
+.services-process{background:var(--brown-deep);padding:7rem 5%;}
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid rgba(192,144,96,0.2);margin-top:4rem;}
+.process-card{padding:3rem 2rem;border-right:1px solid rgba(192,144,96,0.2);position:relative;}
+.process-card:last-child{border-right:none;}
+.pc-line{position:absolute;top:3.5rem;right:0;left:2rem;height:1px;background:rgba(192,144,96,0.2);}
+.process-card:last-child .pc-line{display:none;}
+.pc-step{width:40px;height:40px;border:1px solid var(--caramel);display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-size:0.95rem;color:var(--caramel);position:relative;z-index:1;background:var(--brown-deep);margin-bottom:2rem;}
+.pc-title{font-family:'Playfair Display',serif;font-size:1.05rem;color:var(--cream);margin-bottom:0.7rem;}
+.pc-desc{font-size:0.75rem;line-height:1.85;font-weight:300;color:rgba(246,237,217,0.5);}
+
+/* Pricing */
+.services-pricing{padding:6rem 5%;background:var(--cream);}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2rem;margin-top:3rem;}
+.pricing-card{background:var(--warm-white);border:1px solid var(--divider);padding:3rem 2.5rem;position:relative;transition:transform 0.3s,box-shadow 0.3s;}
+.pricing-card:hover{transform:translateY(-6px);}
+.pricing-card.featured{background:var(--brown-deep);border-color:var(--brown-deep);}
+.pricing-card.featured .pc-plan,.pricing-card.featured .pricing-price,.pricing-card.featured .pricing-item{color:var(--cream) !important;}
+.pricing-card.featured .pricing-item{color:rgba(246,237,217,0.7) !important;}
+.featured-label{position:absolute;top:-1px;right:2rem;background:var(--caramel);font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;padding:0.3rem 0.9rem;color:var(--warm-white);}
+.pc-plan{font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--caramel);margin-bottom:1rem;}
+.pricing-price{font-family:'Playfair Display',serif;font-size:2.2rem;color:var(--brown-deep);margin-bottom:0.3rem;}
+.pricing-note{font-size:0.72rem;color:var(--text-soft);margin-bottom:2rem;padding-bottom:2rem;border-bottom:1px solid var(--divider);}
+.pricing-items{list-style:none;display:flex;flex-direction:column;gap:0.8rem;margin-bottom:2.5rem;}
+.pricing-item{font-size:0.78rem;font-weight:300;color:var(--text-mid);padding-left:1.2rem;position:relative;}
+.pricing-item::before{content:'✓';position:absolute;left:0;color:var(--caramel);font-size:0.7rem;}
+
+/* ═══════════════════════════════
+   CONTACT PAGE
+═══════════════════════════════ */
+.contact-hero{background:var(--brown-deep);padding:6rem 5%;position:relative;overflow:hidden;}
+.contact-hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,rgba(192,144,96,0.04) 0,rgba(192,144,96,0.04) 1px,transparent 0,transparent 40px),repeating-linear-gradient(-45deg,rgba(192,144,96,0.04) 0,rgba(192,144,96,0.04) 1px,transparent 0,transparent 40px);}
+.contact-hero .section-tag{color:var(--caramel-light);}
+.contact-hero .section-tag::before{background:var(--caramel-light);}
+.contact-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.4rem,5vw,4rem);font-weight:400;line-height:1.1;color:var(--cream);margin-bottom:0;position:relative;}
+.contact-hero h1 em{font-style:italic;color:var(--caramel-light);}
+
+.contact-main{padding:5rem 5%;display:grid;grid-template-columns:1fr 1.4fr;gap:6rem;}
+.contact-left{}
+.contact-left h3{font-family:'Playfair Display',serif;font-size:1.3rem;color:var(--brown-deep);margin-bottom:1.5rem;}
+.contact-left p{font-size:0.85rem;line-height:2;font-weight:300;color:var(--text-mid);margin-bottom:2.5rem;}
+.contact-items{display:flex;flex-direction:column;gap:0;}
+.ci{padding:1.5rem 0;border-bottom:1px solid var(--divider);}
+.ci:first-child{border-top:1px solid var(--divider);}
+.ci-label{font-size:0.62rem;letter-spacing:0.28em;text-transform:uppercase;color:var(--caramel);margin-bottom:0.5rem;}
+.ci-val{font-size:0.85rem;line-height:1.8;font-weight:300;color:var(--text-dark);}
+.map-placeholder{margin-top:2.5rem;height:200px;background:var(--cream-dark);border:1px solid var(--divider);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.map-grid{position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 29px,rgba(160,112,80,0.1) 30px),repeating-linear-gradient(90deg,transparent,transparent 29px,rgba(160,112,80,0.1) 30px);}
+.map-pin{position:relative;z-index:1;text-align:center;}
+.map-pin-dot{width:16px;height:16px;background:var(--caramel);border-radius:50%;margin:0 auto 0.5rem;box-shadow:0 0 0 6px rgba(192,144,96,0.2);}
+.map-pin-label{font-size:0.7rem;letter-spacing:0.1em;color:var(--brown-mid);}
+
+/* Form */
+.contact-form{display:flex;flex-direction:column;gap:0;}
+.cf-section{font-size:0.65rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--caramel);padding:1.5rem 0 1rem;border-top:1px solid var(--divider);}
+.cf-section:first-child{border-top:none;padding-top:0;}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:2rem;}
+.fg{display:flex;flex-direction:column;gap:0.5rem;margin-bottom:1.5rem;}
+.fl{font-size:0.62rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--brown-mid);}
+.fi{background:transparent;border:none;border-bottom:1px solid var(--divider-strong);padding:0.75rem 0;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:300;color:var(--text-dark);outline:none;transition:border-color 0.2s;width:100%;}
+.fi:focus{border-color:var(--caramel);}
+.fi::placeholder{color:var(--text-soft);opacity:0.6;}
+textarea.fi{resize:none;min-height:110px;}
+select.fi{cursor:pointer;appearance:none;background-image:url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L5 5L9 1' stroke='%239B7A5A' stroke-width='1.5'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 0 center;}
+select.fi option{background:var(--warm-white);color:var(--text-dark);}
+.form-submit{margin-top:1rem;padding:1rem 2.8rem;background:var(--brown-deep);color:var(--cream);font-family:'DM Sans',sans-serif;font-size:0.72rem;letter-spacing:0.2em;text-transform:uppercase;font-weight:500;border:none;cursor:pointer;transition:background 0.25s,transform 0.2s;}
+.form-submit:hover{background:var(--brown-rich);transform:translateY(-2px);}
+.hours-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:0.8rem;}
+.hour-item{font-size:0.8rem;font-weight:300;color:var(--text-mid);line-height:1.7;}
+.hour-day{font-weight:500;color:var(--brown-deep);}
+
+/* ═══════════════════════════════
+   FABRIC PATTERNS / SWATCHES
+═══════════════════════════════ */
+.sw-wool{background:repeating-linear-gradient(90deg,rgba(122,80,53,0.12) 0,rgba(122,80,53,0.12) 1px,transparent 1px,transparent 6px),repeating-linear-gradient(0deg,rgba(122,80,53,0.08) 0,rgba(122,80,53,0.08) 1px,transparent 1px,transparent 6px),#EDE0C4;}
+.sw-linen{background:repeating-linear-gradient(90deg,rgba(160,112,80,0.15) 0,rgba(160,112,80,0.15) 1px,transparent 1px,transparent 8px),repeating-linear-gradient(0deg,rgba(192,144,96,0.1) 0,rgba(192,144,96,0.1) 1px,transparent 1px,transparent 12px),#F0E8D4;}
+.sw-cashmere{background:radial-gradient(ellipse 70% 80% at 40% 30%,rgba(212,170,122,0.25) 0%,transparent 65%),#E8D8C4;}
+.sw-tweed{background:repeating-linear-gradient(45deg,rgba(74,46,26,0.08) 0,rgba(74,46,26,0.08) 2px,transparent 2px,transparent 10px),repeating-linear-gradient(-45deg,rgba(74,46,26,0.08) 0,rgba(74,46,26,0.08) 2px,transparent 2px,transparent 10px),#D4C4B0;}
+.sw-silk{background:linear-gradient(125deg,rgba(212,170,122,0.3) 0%,rgba(246,237,217,0.1) 40%,rgba(212,170,122,0.2) 70%),#F0E4CC;}
+.sw-cotton{background:repeating-linear-gradient(90deg,rgba(160,112,80,0.1) 0,rgba(160,112,80,0.1) 1px,transparent 1px,transparent 5px),repeating-linear-gradient(0deg,rgba(160,112,80,0.06) 0,rgba(160,112,80,0.06) 1px,transparent 1px,transparent 5px),#EAE0D0;}
+.sw-herringbone{background:repeating-linear-gradient(60deg,rgba(74,46,26,0.09) 0,rgba(74,46,26,0.09) 2px,transparent 2px,transparent 8px),repeating-linear-gradient(-60deg,rgba(74,46,26,0.09) 0,rgba(74,46,26,0.09) 2px,transparent 2px,transparent 8px),#D8C8B4;}
+.sw-stripe{background:repeating-linear-gradient(0deg,rgba(74,46,26,0.12) 0,rgba(74,46,26,0.12) 3px,transparent 3px,transparent 20px,rgba(192,144,96,0.08) 20px,rgba(192,144,96,0.08) 22px,transparent 22px,transparent 40px),#E8DCC8;}
+
+/* gallery items height variety */
+.gh-tall{height:360px;}
+.gh-med{height:260px;}
+.gh-short{height:200px;}
+
+.gallery-item-inner.gh-tall,.gallery-item-inner.gh-med,.gallery-item-inner.gh-short{width:100%;}
+
+/* Team placeholder art */
+.tp1{background:radial-gradient(ellipse 60% 80% at 40% 50%,rgba(122,80,53,0.15) 0%,transparent 70%),var(--cream-dark);}
+.tp2{background:repeating-linear-gradient(160deg,rgba(160,112,80,0.1) 0,rgba(160,112,80,0.1) 2px,transparent 2px,transparent 20px),var(--cream);}
+.tp3{background:repeating-conic-gradient(rgba(160,112,80,0.07) 0% 25%,transparent 0% 50%) 0 0/12px 12px,var(--cream-dark);}
+
+/* Service visual fills */
+.sv1{background:linear-gradient(135deg,#3D2B1F 0%,#6B4236 100%);}
+.sv2{background:repeating-linear-gradient(45deg,rgba(122,80,53,0.08) 0,rgba(122,80,53,0.08) 2px,transparent 2px,transparent 12px),#EDE0C4;}
+.sv3{background:radial-gradient(ellipse 60% 70% at 55% 40%,rgba(212,170,122,0.3) 0%,transparent 65%),#2B1A0F;}
+.sv4{background:repeating-linear-gradient(90deg,rgba(74,46,26,0.1) 0,rgba(74,46,26,0.1) 1px,transparent 1px,transparent 10px),repeating-linear-gradient(0deg,rgba(74,46,26,0.06) 0,rgba(74,46,26,0.06) 1px,transparent 1px,transparent 10px),#E8D8C0;}
+
+/* gallery home fills */
+.gg1{background:linear-gradient(150deg,#3D2B1F 0%,#6B4236 100%);height:100%;}
+.gg2{background:repeating-linear-gradient(45deg,rgba(122,80,53,0.12) 0,rgba(122,80,53,0.12) 2px,transparent 2px,transparent 16px),#EDE0C4;height:100%;}
+.gg3{background:repeating-conic-gradient(rgba(122,80,53,0.1) 0% 25%,transparent 0% 50%) 0 0/20px 20px,#D4C4B0;height:100%;}
+.gg4{background:radial-gradient(ellipse 70% 60% at 40% 60%,rgba(212,170,122,0.4) 0%,transparent 65%),#2B1A0F;height:100%;}
+.gg5{background:repeating-linear-gradient(160deg,rgba(160,112,80,0.12) 0,rgba(160,112,80,0.12) 3px,transparent 3px,transparent 30px,rgba(74,46,26,0.08) 30px,rgba(74,46,26,0.08) 32px,transparent 32px,transparent 62px),#F0E8D4;height:100%;}
+
+/* ── FOOTER ── */
+footer{background:var(--brown-deep);padding:4rem 5%;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;border-top:1px solid rgba(192,144,96,0.2);}
+.footer-brand .nav-logo{display:block;margin-bottom:1rem;}
+.footer-tagline{font-size:0.78rem;line-height:1.8;font-weight:300;color:rgba(246,237,217,0.5);max-width:220px;}
+.footer-col-title{font-size:0.62rem;letter-spacing:0.3em;text-transform:uppercase;color:var(--caramel);margin-bottom:1.2rem;}
+.footer-links{list-style:none;display:flex;flex-direction:column;gap:0.7rem;}
+.footer-links li a{font-size:0.78rem;font-weight:300;color:rgba(246,237,217,0.5);text-decoration:none;cursor:pointer;transition:color 0.2s;}
+.footer-links li a:hover{color:var(--cream);}
+.footer-bottom{background:var(--brown-deep);padding:1.5rem 5%;border-top:1px solid rgba(192,144,96,0.1);display:flex;justify-content:space-between;align-items:center;}
+.footer-copy{font-size:0.68rem;color:rgba(246,237,217,0.3);letter-spacing:0.1em;}
+</style>
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAVIGATION -->
+<nav id="mainNav">
+  <div class="nav-logo" onclick="showPage('home')">Atelier <span>Thorne</span></div>
+  <ul class="nav-links">
+    <li><a onclick="showPage('home')" class="active" data-page="home">Home</a></li>
+    <li><a onclick="showPage('about')" data-page="about">About</a></li>
+    <li><a onclick="showPage('gallery')" data-page="gallery">Gallery</a></li>
+    <li><a onclick="showPage('materials')" data-page="materials">Materials</a></li>
+    <li><a onclick="showPage('services')" data-page="services">Services</a></li>
+    <li><a onclick="showPage('contact')" data-page="contact">Contact</a></li>
+  </ul>
+  <span class="nav-book" onclick="showPage('contact')">Book Consultation</span>
+</nav>
+
+<!-- ══════════════ HOME ══════════════ -->
+<div id="page-home" class="page active">
+
+  <div class="hero">
+    <div class="hero-left">
+      <p class="hero-year anim-up d1">Est. 1994 · Fine Tailors</p>
+      <h1 class="hero-h1 anim-up d2">Dressed in<br><em>perfection,</em><br>cut for you.</h1>
+      <p class="hero-sub anim-up d3">Bespoke tailoring for those who understand that the finest garments are not bought — they are crafted, fitted, and lived in.</p>
+      <div class="hero-actions anim-up d4">
+        <span class="btn-fill" onclick="showPage('services')">Our Services</span>
+        <span class="btn-outline" style="border-color:rgba(246,237,217,0.3);color:var(--cream);" onclick="showPage('gallery')">View Gallery</span>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-fabric-display">
+        <div class="fabric-showcase">
+          <div class="fabric-card-large fc1" style="top:5%;left:5%;"></div>
+          <div class="fabric-card-large fc2" style="bottom:5%;right:5%;"></div>
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;text-align:center;">
+            <div style="font-family:'Playfair Display',serif;font-size:0.65rem;letter-spacing:0.35em;text-transform:uppercase;color:var(--brown-mid);border:1px solid var(--divider-strong);padding:0.6rem 1.5rem;background:var(--warm-white);">Finest Fabrics</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-stats">
+        <div><div class="hstat-num">30+</div><div class="hstat-label">Years Craft</div></div>
+        <div><div class="hstat-num">5K+</div><div class="hstat-label">Garments Made</div></div>
+        <div><div class="hstat-num">200+</div><div class="hstat-label">Fabric Selections</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="features-strip">
+    <div class="feature-item"><div class="feature-icon">✦</div><div><div class="feature-title">Fully Bespoke</div><div class="feature-desc">Every garment cut from scratch for your precise measurements.</div></div></div>
+    <div class="feature-item"><div class="feature-icon">◈</div><div><div class="feature-title">Premium Fabrics</div><div class="feature-desc">Sourced from the finest mills in Italy, England & Japan.</div></div></div>
+    <div class="feature-item"><div class="feature-icon">◻</div><div><div class="feature-title">Master Artisans</div><div class="feature-desc">Twelve craftspeople with over 200 combined years of experience.</div></div></div>
+    <div class="feature-item"><div class="feature-icon">◯</div><div><div class="feature-title">Lifetime Adjustments</div><div class="feature-desc">Every garment we create is cared for, always.</div></div></div>
+  </div>
+
+  <div class="home-intro">
+    <div class="intro-left">
+      <p class="section-tag">Who We Are</p>
+      <h2 class="display">A legacy of craft<br>in every <em>stitch.</em></h2>
+      <div style="margin-top:2rem;display:flex;gap:2rem;flex-wrap:wrap;">
+        <span class="btn-fill" onclick="showPage('about')">Our Story</span>
+      </div>
+    </div>
+    <div class="intro-right">
+      <p>"Atelier Thorne was founded on a single belief: that the way a garment fits changes the way you move through the world."</p>
+      <p>For over three decades, our atelier has served discerning clients from Bangkok and beyond — heads of industry, diplomats, brides, and those who simply refuse to settle for less than extraordinary.</p>
+      <p>Every commission begins as a conversation and ends as an heirloom. From the first drape to the final stitch, your garment is shaped by hands that have dedicated their lives to this craft.</p>
+    </div>
+  </div>
+
+  <div class="home-materials">
+    <div class="home-materials-head">
+      <div>
+        <p class="section-tag">Best Sellers</p>
+        <h2 class="display">Our finest <em>materials.</em></h2>
+      </div>
+      <span class="btn-outline" onclick="showPage('materials')">View All Fabrics</span>
+    </div>
+    <div class="materials-scroll">
+      <div class="mat-preview" onclick="showPage('materials')"><div class="mat-swatch sw-cashmere"></div><div class="mat-info"><div class="mat-name">Loro Piana Cashmere</div><div class="mat-type">Fine Cashmere · Italy</div><div class="mat-price">From ฿18,500 / m</div></div></div>
+      <div class="mat-preview" onclick="showPage('materials')"><div class="mat-swatch sw-tweed"></div><div class="mat-info"><div class="mat-name">Harris Tweed</div><div class="mat-type">Wool Tweed · Scotland</div><div class="mat-price">From ฿8,200 / m</div></div></div>
+      <div class="mat-preview" onclick="showPage('materials')"><div class="mat-swatch sw-silk"></div><div class="mat-info"><div class="mat-name">Japanese Silk</div><div class="mat-type">Pure Silk · Japan</div><div class="mat-price">From ฿12,900 / m</div></div></div>
+      <div class="mat-preview" onclick="showPage('materials')"><div class="mat-swatch sw-wool"></div><div class="mat-info"><div class="mat-name">Dormeuil Wool</div><div class="mat-type">Super 150s Wool · UK</div><div class="mat-price">From ฿11,400 / m</div></div></div>
+    </div>
+  </div>
+
+  <div class="home-gallery-preview">
+    <p class="section-tag" style="color:var(--caramel-light);"><span style="content:'';width:28px;height:1px;background:var(--caramel-light);display:inline-block;margin-right:0.8rem;vertical-align:middle;"></span>Portfolio</p>
+    <h2 class="display" style="color:var(--cream);margin-top:0.5rem;">Selected <em>works.</em></h2>
+    <div class="gallery-grid-home">
+      <div class="gg-item"><div class="gg-inner"><div class="gg1"></div></div><div class="gg-overlay"></div><div class="gg-label">Bespoke Suit · 2024</div></div>
+      <div class="gg-item"><div class="gg-inner"><div class="gg2"></div></div><div class="gg-overlay"></div><div class="gg-label">Wool Overcoat</div></div>
+      <div class="gg-item"><div class="gg-inner"><div class="gg3"></div></div><div class="gg-overlay"></div><div class="gg-label">Wedding Morning Coat</div></div>
+      <div class="gg-item"><div class="gg-inner"><div class="gg4"></div></div><div class="gg-overlay"></div><div class="gg-label">Evening Wear</div></div>
+      <div class="gg-item"><div class="gg-inner"><div class="gg5"></div></div><div class="gg-overlay"></div><div class="gg-label">Ladies' Blazer</div></div>
+    </div>
+    <div class="home-gallery-cta"><span class="btn-fill" onclick="showPage('gallery')" style="margin-top:2.5rem;display:inline-block;">View Full Gallery</span></div>
+  </div>
+
+  <div class="home-testimonial">
+    <div class="test-left">
+      <p class="section-tag">Client Words</p>
+      <h2 class="display">What our clients <em>say.</em></h2>
+    </div>
+    <div>
+      <p class="blockquote-text">"I have worn bespoke garments from London to Milan, and nothing has compared to the care and precision of Atelier Thorne. My suits have become the most-remarked-upon element of every meeting I attend."</p>
+      <div class="test-author">Khun Somchai Rattanaporn</div>
+      <div class="test-role">Chief Executive, Pacific Holdings Group</div>
+    </div>
+  </div>
+
+</div><!-- end home -->
+
+<!-- ══════════════ ABOUT ══════════════ -->
+<div id="page-about" class="page">
+
+  <div class="about-hero">
+    <div class="about-hero-text">
+      <p class="section-tag">Our Atelier</p>
+      <h1>Where every thread<br>tells a <em>story.</em></h1>
+      <p class="about-hero-sub">Founded in 1994 by Master Tailor Edmund Thorne, our atelier has spent three decades cultivating a singular approach to bespoke tailoring — one that honours tradition while serving the demands of modern life.</p>
+    </div>
+    <div class="about-hero-aside">
+      <div class="about-badge">
+        <div class="about-badge-num">30</div>
+        <div class="about-badge-text">Years of Bespoke Excellence</div>
+        <div style="width:40px;height:1px;background:rgba(192,144,96,0.3);margin:1.5rem auto;"></div>
+        <div style="font-size:0.68rem;letter-spacing:0.2em;text-transform:uppercase;color:rgba(246,237,217,0.4);">Bangkok · Est. 1994</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-story">
+    <div class="story-text">
+      <p class="section-tag">Our Story</p>
+      <h2 class="display" style="margin-bottom:2rem;">From a small workshop<br>to a <em>landmark.</em></h2>
+      <p>Edmund Thorne arrived in Bangkok in 1991, trained at the London College of Fashion and apprenticed under the legendary Hong Kong tailor Mr. Wei Chun. He found in Bangkok a city of remarkable taste and ambition — and a gap for truly world-class bespoke tailoring.</p>
+      <p>In 1994, he opened a single-room atelier in Silom with one assistant and a bolt of fine English wool. Within five years, by word of mouth alone, Atelier Thorne had outgrown three locations and earned a reputation that stretched beyond Thailand.</p>
+      <p>Today, the atelier employs twelve master craftspeople, maintains relationships with over forty of the world's finest mills, and serves a global clientele from our flagship studio on Sukhumvit Road.</p>
+    </div>
+    <div class="story-visual">
+      <div class="story-img sw-herringbone"></div>
+      <div class="story-img sw-stripe"></div>
+    </div>
+  </div>
+
+  <div class="about-timeline">
+    <p class="section-tag">Our History</p>
+    <h2 class="display">A timeline of <em>milestones.</em></h2>
+    <div class="timeline-track">
+      <div class="timeline-item"><div class="tl-year">1994</div><div class="tl-title">Atelier Thorne Opens</div><div class="tl-desc">Edmund Thorne establishes the atelier in Silom with a focus on English-cut bespoke suiting for Bangkok's professional class.</div></div>
+      <div class="timeline-item"><div class="tl-year">1999</div><div class="tl-title">First International Clients</div><div class="tl-desc">Word spreads to expatriate communities. The atelier begins serving clients from Singapore, Hong Kong, and Europe visiting Bangkok on business.</div></div>
+      <div class="timeline-item"><div class="tl-year">2006</div><div class="tl-title">New Flagship Studio</div><div class="tl-desc">Relocation to a dedicated three-floor studio on Sukhumvit, featuring a fabric library of over 1,500 bolts and a private fitting suite.</div></div>
+      <div class="timeline-item"><div class="tl-year">2012</div><div class="tl-title">Ladies' Tailoring Programme</div><div class="tl-desc">Launch of a dedicated women's tailoring service, led by head cutter Priya Memsri, recognising growing demand for precision womenswear.</div></div>
+      <div class="timeline-item"><div class="tl-year">2019</div><div class="tl-title">Second Generation</div><div class="tl-desc">Edmund's son, Oliver Thorne, joins the atelier as Creative Director, bringing a refined contemporary sensibility to the heritage house.</div></div>
+      <div class="timeline-item"><div class="tl-year">2024</div><div class="tl-title">Thirty Years of Excellence</div><div class="tl-desc">Atelier Thorne marks three decades with the launch of a limited anniversary collection and a new fabric sourcing partnership in Kyoto.</div></div>
+    </div>
+  </div>
+
+  <div class="about-team">
+    <p class="section-tag">The Team</p>
+    <h2 class="display" style="margin-bottom:0;">Meet our <em>artisans.</em></h2>
+    <div class="team-grid">
+      <div class="team-card"><div class="team-img tp1"></div><div class="team-info"><div class="team-name">Edmund Thorne</div><div class="team-role">Founder & Master Tailor</div><div class="team-bio">Trained in London and Hong Kong, Edmund brings 40 years of craft to every consultation. He personally oversees all bespoke commissions.</div></div></div>
+      <div class="team-card"><div class="team-img tp2"></div><div class="team-info"><div class="team-name">Priya Memsri</div><div class="team-role">Head of Ladies' Tailoring</div><div class="team-bio">With training from the Chambre Syndicale in Paris, Priya leads our women's tailoring programme with exceptional precision and artistry.</div></div></div>
+      <div class="team-card"><div class="team-img tp3"></div><div class="team-info"><div class="team-name">Oliver Thorne</div><div class="team-role">Creative Director</div><div class="team-bio">Educated at Central Saint Martins, Oliver shapes the atelier's aesthetic direction and manages fabric acquisitions from European and Japanese mills.</div></div></div>
+    </div>
+  </div>
+
+  <div class="about-values">
+    <p class="section-tag" style="color:var(--caramel-light);"><span style="display:inline-block;width:28px;height:1px;background:var(--caramel-light);margin-right:0.8rem;vertical-align:middle;"></span>Our Values</p>
+    <h2 class="display" style="color:var(--cream);margin-top:0.5rem;">Principles that <em>guide</em><br>every garment.</h2>
+    <div class="values-grid">
+      <div class="value-card"><div class="value-num">01</div><div class="value-title">Unhurried Excellence</div><div class="value-desc">We take the time a garment requires. Nothing is rushed. Every seam, every pressing, every finishing detail receives the attention it deserves.</div></div>
+      <div class="value-card"><div class="value-num">02</div><div class="value-title">Material Integrity</div><div class="value-desc">We work only with fabrics we believe in — sourced directly from mills we have visited, whose standards match our own.</div></div>
+      <div class="value-card"><div class="value-num">03</div><div class="value-title">Personal Relationship</div><div class="value-desc">A bespoke garment is a collaboration. We listen, we advise, and we remember — building wardrobes over years, not transactions.</div></div>
+    </div>
+  </div>
+
+</div><!-- end about -->
+
+<!-- ══════════════ GALLERY ══════════════ -->
+<div id="page-gallery" class="page">
+
+  <div class="gallery-hero">
+    <p class="section-tag">Portfolio</p>
+    <h1>Our finest <em>works.</em></h1>
+    <p style="font-size:0.88rem;line-height:2;font-weight:300;color:var(--text-mid);max-width:480px;margin-top:1rem;">A curated selection of commissions — each one unique, each one a collaboration between craftsperson and client.</p>
+    <div class="gallery-filters">
+      <button class="filter-btn active" onclick="filterGallery('all',this)">All Works</button>
+      <button class="filter-btn" onclick="filterGallery('suits',this)">Suits</button>
+      <button class="filter-btn" onclick="filterGallery('formal',this)">Formal Wear</button>
+      <button class="filter-btn" onclick="filterGallery('ladies',this)">Ladies'</button>
+      <button class="filter-btn" onclick="filterGallery('outerwear',this)">Outerwear</button>
+    </div>
+  </div>
+
+  <div class="gallery-grid" id="galleryGrid">
+    <div class="gallery-item" data-cat="suits"><div class="gallery-item-inner"><div class="gi-swatch gh-tall sw-wool"></div></div><div class="gi-caption"><div class="gi-cat">Bespoke Suits</div><div class="gi-name">The Charcoal Parliament</div></div></div>
+    <div class="gallery-item" data-cat="formal"><div class="gallery-item-inner"><div class="gi-swatch gh-med sv1"></div></div><div class="gi-caption"><div class="gi-cat">Formal Wear</div><div class="gi-name">Black Tie Dinner Jacket</div></div></div>
+    <div class="gallery-item" data-cat="ladies"><div class="gallery-item-inner"><div class="gi-swatch gh-short sw-silk"></div></div><div class="gi-caption"><div class="gi-cat">Ladies' Tailoring</div><div class="gi-name">Ivory Power Blazer</div></div></div>
+    <div class="gallery-item" data-cat="outerwear"><div class="gallery-item-inner"><div class="gi-swatch gh-med sw-tweed"></div></div><div class="gi-caption"><div class="gi-cat">Outerwear</div><div class="gi-name">Harris Tweed Overcoat</div></div></div>
+    <div class="gallery-item" data-cat="suits"><div class="gallery-item-inner"><div class="gi-swatch gh-tall sw-herringbone"></div></div><div class="gi-caption"><div class="gi-cat">Bespoke Suits</div><div class="gi-name">Herringbone Three-Piece</div></div></div>
+    <div class="gallery-item" data-cat="formal"><div class="gallery-item-inner"><div class="gi-swatch gh-short sw-stripe"></div></div><div class="gi-caption"><div class="gi-cat">Formal Wear</div><div class="gi-name">Morning Coat Suite</div></div></div>
+    <div class="gallery-item" data-cat="ladies"><div class="gallery-item-inner"><div class="gi-swatch gh-med sw-linen"></div></div><div class="gi-caption"><div class="gi-cat">Ladies' Tailoring</div><div class="gi-name">Linen Summer Suit</div></div></div>
+    <div class="gallery-item" data-cat="suits"><div class="gallery-item-inner"><div class="gi-swatch gh-short sw-cashmere"></div></div><div class="gi-caption"><div class="gi-cat">Bespoke Suits</div><div class="gi-name">Cashmere Business Suit</div></div></div>
+    <div class="gallery-item" data-cat="outerwear"><div class="gallery-item-inner"><div class="gi-swatch gh-tall sw-cotton"></div></div><div class="gi-caption"><div class="gi-cat">Outerwear</div><div class="gi-name">Cotton Chesterfield</div></div></div>
+  </div>
+
+</div><!-- end gallery -->
+
+<!-- ══════════════ MATERIALS ══════════════ -->
+<div id="page-materials" class="page">
+
+  <div class="mat-hero">
+    <div class="mat-hero-inner">
+      <div>
+        <p class="section-tag">Our Fabric Library</p>
+        <h1>The finest <em>materials</em><br>in the world.</h1>
+      </div>
+      <div class="mat-hero-right">
+        <p>We source exclusively from mills that share our belief in quality over quantity — family-run producers in the Yorkshire Dales, the Biella valley, Kyoto, and the Scottish Highlands.</p>
+        <p>Our fabric library holds over 200 bolts at any time, renewed each season and curated personally by our team during sourcing trips to Europe and Japan.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="mat-featured">
+    <div class="mat-featured-head">
+      <div>
+        <p class="section-tag">Best Sellers</p>
+        <h2 class="display">Most sought-after <em>fabrics.</em></h2>
+      </div>
+    </div>
+
+    <div class="mat-list">
+      <div class="mat-row">
+        <div class="mat-swatch-sq sw-cashmere"></div>
+        <div class="mat-row-info">
+          <div style="display:flex;align-items:center;gap:1rem;"><div class="mat-row-name">Loro Piana Cashmere</div><span class="bestseller-badge">Best Seller</span></div>
+          <div class="mat-row-origin">Cashmere · Loro Piana, Italy</div>
+          <div class="mat-row-desc">Ultra-fine cashmere with an unparalleled softness. Sourced from the finest Mongolian herds, woven in Biella by Italy's most celebrated mill. Suited for jackets, trousers, and lightweight overcoats.</div>
+          <div class="mat-row-tags"><span class="mat-tag">Suits</span><span class="mat-tag">Jackets</span><span class="mat-tag">Overcoats</span></div>
+        </div>
+        <div class="mat-row-price"><div class="mat-price-num">฿18,500</div><div class="mat-price-unit">per metre</div><span class="bestseller-badge" style="display:block;margin-top:0.6rem;">Most Popular</span></div>
+      </div>
+
+      <div class="mat-row">
+        <div class="mat-swatch-sq sw-wool"></div>
+        <div class="mat-row-info">
+          <div class="mat-row-name">Dormeuil Amadeus</div>
+          <div class="mat-row-origin">Super 150s Wool · Dormeuil, UK</div>
+          <div class="mat-row-desc">One of the finest wool fabrics in existence. Dormeuil's Amadeus Super 150s delivers an extraordinary drape and a subtle sheen that elevates any suit into a statement.</div>
+          <div class="mat-row-tags"><span class="mat-tag">Suits</span><span class="mat-tag">Formal</span><span class="mat-tag">Trousers</span></div>
+        </div>
+        <div class="mat-row-price"><div class="mat-price-num">฿11,400</div><div class="mat-price-unit">per metre</div></div>
+      </div>
+
+      <div class="mat-row">
+        <div class="mat-swatch-sq sw-tweed"></div>
+        <div class="mat-row-info">
+          <div style="display:flex;align-items:center;gap:1rem;"><div class="mat-row-name">Harris Tweed</div><span class="bestseller-badge">Best Seller</span></div>
+          <div class="mat-row-origin">Wool Tweed · Harris Tweed Authority, Scotland</div>
+          <div class="mat-row-desc">Hand-woven in the Outer Hebrides from pure virgin wool, certified by the Harris Tweed Authority. Robust, characterful, and timeless — a fabric that tells a story.</div>
+          <div class="mat-row-tags"><span class="mat-tag">Jackets</span><span class="mat-tag">Overcoats</span><span class="mat-tag">Waistcoats</span></div>
+        </div>
+        <div class="mat-row-price"><div class="mat-price-num">฿8,200</div><div class="mat-price-unit">per metre</div></div>
+      </div>
+
+      <div class="mat-row">
+        <div class="mat-swatch-sq sw-silk"></div>
+        <div class="mat-row-info">
+          <div class="mat-row-name">Nishijin Silk</div>
+          <div class="mat-row-origin">Pure Silk · Nishijin, Kyoto Japan</div>
+          <div class="mat-row-desc">Woven using techniques unchanged since the 5th century in Kyoto's ancient Nishijin district. Our silk selection is reserved for linings, occasion wear, and the most special commissions.</div>
+          <div class="mat-row-tags"><span class="mat-tag">Linings</span><span class="mat-tag">Evening Wear</span><span class="mat-tag">Occasion</span></div>
+        </div>
+        <div class="mat-row-price"><div class="mat-price-num">฿12,900</div><div class="mat-price-unit">per metre</div></div>
+      </div>
+
+      <div class="mat-row">
+        <div class="mat-swatch-sq sw-linen"></div>
+        <div class="mat-row-info">
+          <div style="display:flex;align-items:center;gap:1rem;"><div class="mat-row-name">Irish Linen</div><span class="bestseller-badge">Seasonal Pick</span></div>
+          <div class="mat-row-origin">Pure Linen · Baird McNutt, Ireland</div>
+          <div class="mat-row-desc">A warm-climate essential. Baird McNutt's pure Irish linen is the finest available — breathable, structured, and grows more beautiful with every wear.</div>
+          <div class="mat-row-tags"><span class="mat-tag">Suits</span><span class="mat-tag">Trousers</span><span class="mat-tag">Shirts</span></div>
+        </div>
+        <div class="mat-row-price"><div class="mat-price-num">฿5,800</div><div class="mat-price-unit">per metre</div></div>
+      </div>
+
+      <div class="mat-row">
+        <div class="mat-swatch-sq sw-herringbone"></div>
+        <div class="mat-row-info">
+          <div class="mat-row-name">Holland &amp; Sherry Herringbone</div>
+          <div class="mat-row-origin">Wool Blend · Holland &amp; Sherry, Yorkshire</div>
+          <div class="mat-row-desc">The definitive British herringbone. Holland & Sherry's classic pattern in a refined mid-weight wool blend is one of the most versatile fabrics in our library.</div>
+          <div class="mat-row-tags"><span class="mat-tag">Suits</span><span class="mat-tag">Jackets</span><span class="mat-tag">Trousers</span></div>
+        </div>
+        <div class="mat-row-price"><div class="mat-price-num">฿9,600</div><div class="mat-price-unit">per metre</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mat-guide">
+    <p class="section-tag">Fabric Guide</p>
+    <h2 class="display">How to choose the <em>right fabric.</em></h2>
+    <div class="guide-grid">
+      <div class="guide-card"><div class="guide-icon">🌡</div><div class="guide-title">Consider the Climate</div><div class="guide-text">Bangkok's heat calls for breathable fabrics like linen, tropical-weight wool, and fine cotton. Reserve heavier cashmere and tweed for travel garments or air-conditioned environments.</div></div>
+      <div class="guide-card"><div class="guide-icon">◈</div><div class="guide-title">Think About Occasion</div><div class="guide-text">For boardroom suits, a Super 120s or 150s wool offers the right authority. For weddings and formal events, silk blends and fine cashmere elevate the moment.</div></div>
+      <div class="guide-card"><div class="guide-icon">♻</div><div class="guide-title">Durability vs. Luxury</div><div class="guide-text">Higher twist numbers mean more durable, wrinkle-resistant cloth. Lower twist creates a softer, more luxurious hand. Our tailors will guide you to the right balance.</div></div>
+    </div>
+  </div>
+
+</div><!-- end materials -->
+
+<!-- ══════════════ SERVICES ══════════════ -->
+<div id="page-services" class="page">
+
+  <div class="services-hero">
+    <p class="section-tag">What We Offer</p>
+    <h1>Services crafted<br>with <em>purpose.</em></h1>
+    <p class="services-hero-sub">Every service we offer begins with listening. We do not offer solutions before understanding the person — their life, their wardrobe, their ambitions.</p>
+  </div>
+
+  <div class="services-list">
+    <div class="service-block">
+      <div class="sb-text">
+        <div class="sb-num">01</div>
+        <h3 class="sb-title">Bespoke Suiting</h3>
+        <p class="sb-desc">The pinnacle of our craft. A fully bespoke suit is cut from scratch — no base pattern, no shortcuts. Every measurement of your body is taken, every preference noted, and a unique paper pattern is created for you alone.</p>
+        <div class="sb-includes"><div class="sb-includes-label">What's Included</div><div class="sb-include-item">Full body measurement session with master tailor</div><div class="sb-include-item">Selection from 200+ premium fabrics</div><div class="sb-include-item">Unique paper pattern made for your body</div><div class="sb-include-item">Three fittings (baste, forward, final)</div><div class="sb-include-item">Lifetime adjustment guarantee</div></div>
+        <p class="sb-price">From <strong>฿85,000</strong> per suit</p>
+        <span class="btn-fill" onclick="showPage('contact')">Begin a Commission</span>
+      </div>
+      <div class="sb-visual sv1"></div>
+    </div>
+
+    <div class="service-block reverse">
+      <div class="sb-text">
+        <div class="sb-num">02</div>
+        <h3 class="sb-title">Made to Measure</h3>
+        <p class="sb-desc">For clients who desire a personal fit and fabric selection without the full bespoke process, made to measure offers remarkable results at a shorter lead time. Your measurements are mapped to a refined base pattern, which is adjusted specifically for you.</p>
+        <div class="sb-includes"><div class="sb-includes-label">What's Included</div><div class="sb-include-item">Comprehensive measurement session</div><div class="sb-include-item">Choice from 120+ fabric options</div><div class="sb-include-item">Two fittings with expert adjustments</div><div class="sb-include-item">Personal style consultation</div></div>
+        <p class="sb-price">From <strong>฿42,000</strong> per suit</p>
+        <span class="btn-fill" onclick="showPage('contact')">Begin a Commission</span>
+      </div>
+      <div class="sb-visual sv2"></div>
+    </div>
+
+    <div class="service-block">
+      <div class="sb-text">
+        <div class="sb-num">03</div>
+        <h3 class="sb-title">Formal & Occasion Wear</h3>
+        <p class="sb-desc">Weddings, black tie galas, state functions — these are the moments that demand perfection. Our formal wear service is designed to create garments worthy of life's most significant occasions and treasured for decades thereafter.</p>
+        <div class="sb-includes"><div class="sb-includes-label">Specialties</div><div class="sb-include-item">Wedding morning coats & lounge suits</div><div class="sb-include-item">Black tie dinner jackets & white tie</div><div class="sb-include-item">Traditional Thai formal dress</div><div class="sb-include-item">Military and ceremonial dress</div></div>
+        <p class="sb-price">From <strong>฿65,000</strong></p>
+        <span class="btn-fill" onclick="showPage('contact')">Enquire Now</span>
+      </div>
+      <div class="sb-visual sv3"></div>
+    </div>
+
+    <div class="service-block reverse">
+      <div class="sb-text">
+        <div class="sb-num">04</div>
+        <h3 class="sb-title">Alteration & Restoration</h3>
+        <p class="sb-desc">A fine garment should last a lifetime. Whether you have acquired a suit that needs fitting, inherited a cherished piece, or wish to update an older garment, our alteration service extends the life of the clothes you love.</p>
+        <div class="sb-includes"><div class="sb-includes-label">We Handle</div><div class="sb-include-item">Structural fit alterations</div><div class="sb-include-item">Let-in and let-out adjustments</div><div class="sb-include-item">Relining and restoring vintage garments</div><div class="sb-include-item">Style updates (lapel, button, silhouette)</div></div>
+        <p class="sb-price">From <strong>฿2,500</strong></p>
+        <span class="btn-fill" onclick="showPage('contact')">Request Assessment</span>
+      </div>
+      <div class="sb-visual sv4"></div>
+    </div>
+  </div>
+
+  <div class="services-process">
+    <p class="section-tag" style="color:var(--caramel-light);"><span style="display:inline-block;width:28px;height:1px;background:var(--caramel-light);margin-right:0.8rem;vertical-align:middle;"></span>Our Process</p>
+    <h2 class="display" style="color:var(--cream);margin-top:0.5rem;">How a bespoke garment<br><em>comes to life.</em></h2>
+    <div class="process-grid">
+      <div class="process-card"><div class="pc-line"></div><div class="pc-step">I</div><div class="pc-title">Consultation</div><div class="pc-desc">We begin with a conversation — your lifestyle, events, and what you want your clothes to say about you. No two consultations are the same.</div></div>
+      <div class="process-card"><div class="pc-line"></div><div class="pc-step">II</div><div class="pc-title">Fabric & Design</div><div class="pc-desc">Browse our library of 200+ fabrics. We advise on weight, weave, and colour — then finalise all design details from buttons to stitching.</div></div>
+      <div class="process-card"><div class="pc-line"></div><div class="pc-step">III</div><div class="pc-title">Fitting Sessions</div><div class="pc-desc">Multiple fittings ensure the garment evolves precisely to your form. Adjustments are made by hand with each session.</div></div>
+      <div class="process-card"><div class="pc-step">IV</div><div class="pc-title">Delivery</div><div class="pc-desc">Your finished garment arrives with a care card and an invitation for lifetime adjustments whenever your body or needs change.</div></div>
+    </div>
+  </div>
+
+  <div class="services-pricing">
+    <p class="section-tag">Investment</p>
+    <h2 class="display">Choose your <em>experience.</em></h2>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <div class="pc-plan">Made to Measure</div>
+        <div class="pricing-price">฿42,000+</div>
+        <div class="pricing-note">Per suit · 4–5 weeks lead time</div>
+        <ul class="pricing-items">
+          <li class="pricing-item">Measurement & consultation</li>
+          <li class="pricing-item">120+ fabric choices</li>
+          <li class="pricing-item">2 fitting sessions</li>
+          <li class="pricing-item">Personal pattern on file</li>
+        </ul>
+        <span class="btn-outline" onclick="showPage('contact')">Book Appointment</span>
+      </div>
+      <div class="pricing-card featured">
+        <div class="featured-label">Most Popular</div>
+        <div class="pc-plan">Bespoke Suiting</div>
+        <div class="pricing-price">฿85,000+</div>
+        <div class="pricing-note" style="border-color:rgba(246,237,217,0.1);">Per suit · 8–10 weeks lead time</div>
+        <ul class="pricing-items">
+          <li class="pricing-item">Unique paper pattern created</li>
+          <li class="pricing-item">200+ premium fabric choices</li>
+          <li class="pricing-item">3 fitting sessions</li>
+          <li class="pricing-item">Hand-finishing throughout</li>
+          <li class="pricing-item">Lifetime adjustment guarantee</li>
+        </ul>
+        <span class="btn-fill" onclick="showPage('contact')" style="background:var(--caramel);color:var(--brown-deep);">Book Appointment</span>
+      </div>
+      <div class="pricing-card">
+        <div class="pc-plan">Corporate Programme</div>
+        <div class="pricing-price">Custom</div>
+        <div class="pricing-note">For 3+ garments · Priority service</div>
+        <ul class="pricing-items">
+          <li class="pricing-item">Dedicated account manager</li>
+          <li class="pricing-item">Preferential pricing tiers</li>
+          <li class="pricing-item">Priority fitting schedule</li>
+          <li class="pricing-item">Wardrobe planning service</li>
+        </ul>
+        <span class="btn-outline" onclick="showPage('contact')">Contact Us</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end services -->
+
+<!-- ══════════════ CONTACT ══════════════ -->
+<div id="page-contact" class="page">
+
+  <div class="contact-hero">
+    <p class="section-tag">Visit the Atelier</p>
+    <h1>Begin your<br><em>commission.</em></h1>
+  </div>
+
+  <div class="contact-main">
+    <div class="contact-left">
+      <h3>Come and see us.</h3>
+      <p>We welcome new clients by appointment. Our initial consultation is complimentary — a relaxed, unhurried conversation about your wardrobe, your life, and how we can best serve you.</p>
+      <div class="contact-items">
+        <div class="ci"><div class="ci-label">Address</div><div class="ci-val">Atelier Thorne<br>88/1 Sukhumvit Road, Level 4<br>Khlong Toei, Bangkok 10110</div></div>
+        <div class="ci"><div class="ci-label">Phone</div><div class="ci-val">+66 2 234 5678</div></div>
+        <div class="ci"><div class="ci-label">Email</div><div class="ci-val">hello@atelierthorne.com</div></div>
+        <div class="ci">
+          <div class="ci-label">Opening Hours</div>
+          <div class="hours-grid">
+            <div class="hour-item"><div class="hour-day">Mon – Fri</div>10:00 – 19:00</div>
+            <div class="hour-item"><div class="hour-day">Saturday</div>10:00 – 17:00</div>
+            <div class="hour-item"><div class="hour-day">Sunday</div>By appointment</div>
+            <div class="hour-item"><div class="hour-day">Public Holidays</div>Closed</div>
+          </div>
+        </div>
+      </div>
+      <div class="map-placeholder">
+        <div class="map-grid"></div>
+        <div class="map-pin">
+          <div class="map-pin-dot"></div>
+          <div class="map-pin-label">Atelier Thorne · Sukhumvit</div>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="contact-form">
+        <div class="cf-section">Personal Details</div>
+        <div class="form-row">
+          <div class="fg"><label class="fl">First Name</label><input class="fi" type="text" placeholder="Your first name"></div>
+          <div class="fg"><label class="fl">Last Name</label><input class="fi" type="text" placeholder="Your last name"></div>
+        </div>
+        <div class="form-row">
+          <div class="fg"><label class="fl">Email Address</label><input class="fi" type="email" placeholder="your@email.com"></div>
+          <div class="fg"><label class="fl">Phone Number</label><input class="fi" type="tel" placeholder="+66 xx xxx xxxx"></div>
+        </div>
+
+        <div class="cf-section">Your Requirements</div>
+        <div class="fg"><label class="fl">Service of Interest</label>
+          <select class="fi">
+            <option value="">Select a service...</option>
+            <option>Bespoke Suiting</option>
+            <option>Made to Measure</option>
+            <option>Formal & Occasion Wear</option>
+            <option>Ladies' Tailoring</option>
+            <option>Corporate Programme</option>
+            <option>Alteration & Restoration</option>
+          </select>
+        </div>
+        <div class="fg"><label class="fl">Preferred Appointment Date</label><input class="fi" type="date"></div>
+        <div class="fg"><label class="fl">Tell Us About Your Project</label><textarea class="fi" placeholder="Tell us about the occasion, your timeline, any fabrics you have in mind, or any questions you have..."></textarea></div>
+
+        <div class="cf-section">How Did You Hear About Us?</div>
+        <div class="fg"><select class="fi"><option value="">Select...</option><option>Client referral</option><option>Instagram</option><option>Google search</option><option>Walk-in</option><option>Press / media</option></select></div>
+
+        <button class="form-submit" onclick="handleContactSubmit(this)">Request Consultation</button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end contact -->
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <div class="nav-logo" onclick="showPage('home')" style="display:block;margin-bottom:1rem;">Atelier <span>Thorne</span></div>
+    <p class="footer-tagline">Bespoke tailoring for those who understand that the finest garments are crafted, not bought.</p>
+  </div>
+  <div>
+    <div class="footer-col-title">Navigate</div>
+    <ul class="footer-links">
+      <li><a onclick="showPage('home')">Home</a></li>
+      <li><a onclick="showPage('about')">About the Atelier</a></li>
+      <li><a onclick="showPage('gallery')">Gallery</a></li>
+      <li><a onclick="showPage('materials')">Materials</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="footer-col-title">Services</div>
+    <ul class="footer-links">
+      <li><a onclick="showPage('services')">Bespoke Suiting</a></li>
+      <li><a onclick="showPage('services')">Made to Measure</a></li>
+      <li><a onclick="showPage('services')">Formal Wear</a></li>
+      <li><a onclick="showPage('services')">Alterations</a></li>
+    </ul>
+  </div>
+  <div>
+    <div class="footer-col-title">Contact</div>
+    <ul class="footer-links">
+      <li><a onclick="showPage('contact')">Book a Consultation</a></li>
+      <li><a>88/1 Sukhumvit Road, BKK</a></li>
+      <li><a>+66 2 234 5678</a></li>
+      <li><a>hello@atelierthorne.com</a></li>
+    </ul>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <div class="footer-copy">© 2024 Atelier Thorne. All rights reserved.</div>
+  <div class="footer-copy">Crafted with care · Bangkok, Thailand</div>
+</div>
+
+<script>
+// Custom cursor
+const cursor = document.getElementById('cursor');
+const ring = document.getElementById('cursorRing');
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top = e.clientY + 'px';
+  ring.style.left = e.clientX + 'px';
+  ring.style.top = e.clientY + 'px';
+});
+
+// Page navigation
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  document.querySelectorAll('.nav-links a').forEach(a => {
+    a.classList.toggle('active', a.getAttribute('data-page') === id);
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// Gallery filter
+function filterGallery(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('#galleryGrid .gallery-item').forEach(item => {
+    const show = cat === 'all' || item.getAttribute('data-cat') === cat;
+    item.style.display = show ? 'block' : 'none';
+  });
+}
+
+// Contact form
+function handleContactSubmit(btn) {
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = 'Request Received ✓';
+    btn.style.background = 'var(--brown-light)';
+  }, 1200);
+}
+</script>
+</body>
+</html>
