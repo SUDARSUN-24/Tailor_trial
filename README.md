@@ -33,6 +33,10 @@ A multi-page website for **Atelier Thorne**, a fictional bespoke tailoring house
 
 Clone the repo and open `index.html` in a browser.
 
+## Author
+
+Made by **Sudasun** ([@SUDARSUN-24](https://github.com/SUDARSUN-24)).
+
 ## Notes
 
 This is a design concept. The business, people, contact details and testimonials are placeholders, and the consultation form doesn't send messages anywhere.
