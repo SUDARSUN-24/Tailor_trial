@@ -399,7 +399,7 @@ footer{background:var(--ink);color:var(--on-dark)}
 .foot h3{font-family:var(--f-mono);font-weight:500;font-size:.7rem;letter-spacing:.14em;text-transform:uppercase;color:var(--thread-light);margin-bottom:1rem}
 .foot ul{list-style:none}
 .foot li{margin-bottom:.45rem}
-.foot li a{font-size:.95rem;color:var(--on-dark-2);text-decoration:none}
+.foot li a,.foot li span{font-size:.95rem;color:var(--on-dark-2);text-decoration:none}
 .foot li a:hover{color:var(--on-dark)}
 .foot-bottom{display:flex;justify-content:space-between;gap:1rem;flex-wrap:wrap;padding-block:1.4rem;border-top:1px solid var(--rule-dark);font-family:var(--f-mono);font-size:.7rem;letter-spacing:.06em;color:var(--on-dark-2)}
 
@@ -422,7 +422,7 @@ footer{background:var(--ink);color:var(--on-dark)}
   .menu-btn{display:flex}
   .hero{grid-template-columns:1fr;min-height:0}
   .hero-text{padding:3rem var(--gutter) 2.5rem}
-  .hero-media{min-height:0;aspect-ratio:4/5;margin-bottom:5.5rem}
+  .hero-media{min-height:0;aspect-ratio:4/5;max-height:72svh;margin-bottom:5.5rem}
   .ticket{left:auto;right:var(--gutter);bottom:-4rem;width:min(250px,calc(100% - 2 * var(--gutter)));font-size:.68rem;padding:1.1rem 1.2rem 1rem}
   .ticket .ticket-note{font-size:.9rem}
   .ledger{grid-template-columns:1fr 1fr}
@@ -505,7 +505,7 @@ footer{background:var(--ink);color:var(--on-dark)}
     <li><a href="#gallery" data-page="gallery">Work</a></li>
     <li><a href="#contact" data-page="contact">Contact</a></li>
   </ul>
-  <p class="mono">88/1 Sukhumvit Road, Level 4<br>Khlong Toei, Bangkok 10110<br><a href="tel:+6622345678">+66 2 234 5678</a></p>
+  <p class="mono">88/1 Sukhumvit Road, Level 4<br>Khlong Toei, Bangkok 10110<br>+66 2 234 5678</p>
 </div>
 
 <main id="main">
@@ -690,7 +690,7 @@ footer{background:var(--ink);color:var(--on-dark)}
     <p class="lede">The first consultation is free and takes about 45 minutes. Bring a jacket you love and we'll talk cloth, cut and timing.</p>
     <div class="hero-actions">
       <a class="btn btn-solid" href="#contact">Book a consultation <span class="arr" aria-hidden="true">→</span></a>
-      <a class="btn btn-line" href="tel:+6622345678">Call +66 2 234 5678</a>
+      <a class="btn btn-line" href="#services">See services and prices</a>
     </div>
   </div>
 
@@ -1052,8 +1052,8 @@ footer{background:var(--ink);color:var(--on-dark)}
     <div>
       <div class="c-items">
         <div class="c-item"><p class="eyebrow">Address</p><p>88/1 Sukhumvit Road, Level 4<br>Khlong Toei, Bangkok 10110</p></div>
-        <div class="c-item"><p class="eyebrow">Phone</p><p><a href="tel:+6622345678">+66 2 234 5678</a></p></div>
-        <div class="c-item"><p class="eyebrow">Email</p><p><a href="mailto:hello@atelierthorne.com">hello@atelierthorne.com</a></p></div>
+        <div class="c-item"><p class="eyebrow">Phone</p><p>+66 2 234 5678</p></div>
+        <div class="c-item"><p class="eyebrow">Email</p><p>hello@atelierthorne.com</p></div>
         <div class="c-item">
           <p class="eyebrow">Opening hours</p>
           <dl class="hours">
@@ -1112,7 +1112,7 @@ footer{background:var(--ink);color:var(--on-dark)}
         <p class="eyebrow">Request sent</p>
         <h2 class="display h-m" style="margin-top:1rem">Thank you, <em id="doneName">there</em>.</h2>
         <div class="seam in" aria-hidden="true"></div>
-        <p class="lede">We'll reply to <strong id="doneEmail"></strong> within one working day to arrange a time. If it's urgent, call us on <a href="tel:+6622345678">+66 2 234 5678</a>.</p>
+        <p class="lede">We'll reply to <strong id="doneEmail"></strong> within one working day to arrange a time. If it's urgent, call us on +66 2 234 5678.</p>
       </div>
     </form>
   </div>
@@ -1138,7 +1138,7 @@ footer{background:var(--ink);color:var(--on-dark)}
     </div>
     <div>
       <h3>Visit</h3>
-      <ul><li><a href="#contact">Book a consultation</a></li><li><a href="tel:+6622345678">+66 2 234 5678</a></li><li><a href="mailto:hello@atelierthorne.com">hello@atelierthorne.com</a></li><li><a href="#contact">88/1 Sukhumvit Road</a></li></ul>
+      <ul><li><a href="#contact">Book a consultation</a></li><li><span>+66 2 234 5678</span></li><li><span>hello@atelierthorne.com</span></li><li><a href="#contact">88/1 Sukhumvit Road</a></li></ul>
     </div>
   </div>
   <div class="wrap foot-bottom">
