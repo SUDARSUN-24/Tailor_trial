@@ -26,7 +26,7 @@ A multi-page website for **Atelier Thorne**, a fictional bespoke tailoring house
 
 - HTML, CSS and JavaScript in one file (`index.html`), with no build step
 - Google Fonts: Bodoni Moda, Hanken Grotesk and IBM Plex Mono
-- Photography from [Unsplash](https://unsplash.com), used under the Unsplash License
+- Photography from [Unsplash](https://unsplash.com), used under the Unsplash License and stored in `images/` as WebP (sources listed in [`images/CREDITS.md`](images/CREDITS.md))
 - Hosted on GitHub Pages
 
 ## Run locally
