@@ -389,6 +389,9 @@ dialog.lightbox::backdrop{background:rgba(12,15,21,.94)}
 .form-done .seam{margin:1.5rem 0 2rem;max-width:240px}
 .sent .form-body{display:none}
 .sent .form-done{display:block}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.form-error{color:var(--thread);border-left:2px solid var(--thread);padding:.6rem .9rem;margin-bottom:1.25rem;background:rgba(142,34,48,.06)}
+.btn[disabled]{opacity:.65;cursor:progress}
 
 /* ───────────────────────── FOOTER ───────────────────────── */
 footer{background:var(--ink);color:var(--on-dark)}
@@ -1101,8 +1104,10 @@ footer{background:var(--ink);color:var(--on-dark)}
           <div class="field"><label for="fMsg">Tell us about it <span class="opt">(optional)</span></label><textarea id="fMsg" name="message" placeholder="The occasion, your timeline, any cloth you have in mind…"></textarea></div>
         </fieldset>
 
+        <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+        <p class="form-error" id="formError" role="alert" hidden></p>
         <div class="form-foot">
-          <button class="btn btn-solid" type="submit">Request consultation <span class="arr" aria-hidden="true">→</span></button>
+          <button class="btn btn-solid" type="submit" id="formSubmit"><span class="lbl">Request consultation</span> <span class="arr" aria-hidden="true">→</span></button>
           <span class="mono">The first consultation is free.</span>
         </div>
       </div>
@@ -1248,6 +1253,7 @@ footer{background:var(--ink);color:var(--on-dark)}
   lb.addEventListener('keydown',function(e){ if(e.key==='ArrowLeft') step(-1); if(e.key==='ArrowRight') step(1); });
 
   /* ── Booking form ── */
+  var FORM_KEY='cf133fd4-d2db-4683-bef8-b8f729a2806a';
   var form=document.getElementById('bookForm');
   form.addEventListener('submit',function(e){
     e.preventDefault();
@@ -1259,10 +1265,32 @@ footer{background:var(--ink);color:var(--on-dark)}
       if(!ok && !bad) bad=el;
     });
     if(bad){ bad.focus(); return; }
-    document.getElementById('doneName').textContent=form.first.value.trim();
-    document.getElementById('doneEmail').textContent=form.email.value.trim();
-    form.classList.add('sent');
-    form.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+    var btn=document.getElementById('formSubmit'), lbl=btn.querySelector('.lbl'), errBox=document.getElementById('formError');
+    var v=function(n){ return form[n].value.trim(); };
+    var name=(v('first')+' '+v('last')).trim();
+    errBox.hidden=true; btn.disabled=true; lbl.textContent='Sending…';
+    fetch('https://api.web3forms.com/submit',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Accept':'application/json'},
+      body:JSON.stringify({
+        access_key:FORM_KEY,
+        subject:'New consultation request: '+name+' ('+v('service')+')',
+        from_name:'Atelier Thorne website',
+        replyto:v('email'),
+        botcheck:form.botcheck.checked,
+        Name:name, Email:v('email'), Phone:v('phone')||'—',
+        Service:v('service'), 'Preferred date':v('date')||'—', Message:v('message')||'—'
+      })
+    }).then(function(r){ return r.json().catch(function(){ return {}; }).then(function(d){ if(!r.ok||!d.success) throw new Error(d.message||'HTTP '+r.status); }); })
+    .then(function(){
+      document.getElementById('doneName').textContent=v('first');
+      document.getElementById('doneEmail').textContent=v('email');
+      form.classList.add('sent');
+      form.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+    }).catch(function(){
+      errBox.textContent="Your request didn't send. Check your internet connection and try again.";
+      errBox.hidden=false;
+    }).then(function(){ btn.disabled=false; lbl.textContent='Request consultation'; });
   });
   form.querySelectorAll('[required]').forEach(function(el){
     el.addEventListener('input',function(){ if(el.closest('.field').classList.contains('invalid') && el.checkValidity() && el.value.trim()!==''){ el.closest('.field').classList.remove('invalid'); el.removeAttribute('aria-invalid'); } });

@@ -18,7 +18,7 @@ A multi-page website for **Atelier Thorne**, a fictional bespoke tailoring house
 - Works on phones, tablets and desktops, with a full-screen menu and a booking bar on small screens
 - Each page has its own link (for example `#services`), and the back button works
 - Fade-in and "stitching" animations on scroll, switched off for visitors who prefer reduced motion
-- Form checks required fields and email format before showing a confirmation
+- Form checks required fields and email format, then emails the request to the owner through [Web3Forms](https://web3forms.com) (no server needed)
 - Gallery viewer supports arrow keys and Escape
 - Link previews (Open Graph) for sharing on social and messaging apps
 
@@ -39,4 +39,4 @@ Made by **Sudasun** ([@SUDARSUN-24](https://github.com/SUDARSUN-24)).
 
 ## Notes
 
-This is a design concept. The business, people, contact details and testimonials are placeholders, and the consultation form doesn't send messages anywhere.
+This is a design concept. The business, people, contact details and testimonials are placeholders. The consultation form does send: requests arrive by email, with Reply going straight to the customer.
