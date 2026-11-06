@@ -10,7 +10,7 @@ A multi-page website for **Atelier Thorne**, a fictional bespoke tailoring house
 - **About**: the atelier's story, a timeline, the team and its principles
 - **Services**: bespoke suiting, made to measure, formal and occasion wear, alteration and restoration, plus how a bespoke garment is made step by step
 - **Materials**: the finest fabrics, the most sought-after choices and a guide to choosing
-- **Gallery**: a showcase of finished pieces
+- **Gallery**: a portfolio of commissions, filterable by suits, formal wear, ladies' tailoring and outerwear
 - **Contact**: an appointment enquiry form and studio details
 
 Navigation switches between pages in place, with no page reloads.
